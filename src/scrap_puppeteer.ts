@@ -1,13 +1,5 @@
 import puppeteer from 'puppeteer';
 
-interface ILaptops {
-  price: number,
-  img: string,
-  link: string,
-  description: string,
-  review: string
-}
-
 async function getDataFromSite() {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
@@ -28,16 +20,14 @@ async function getDataFromSite() {
   }, resultsSelector);
 
   await browser.close();
-
   let laptops = await dataConverter(data)
-  let lenovo = await filterByName(laptops)
-  let priceOrder = await sortByPrice(lenovo)
 
-  return priceOrder
+  return laptops
+
 };
 
 async function dataConverter(data: Array<string>) {
-  let laptops: ILaptops [] = []
+  let laptops: ILaptops[] = []
   for (var i = 0; i < data.length; i++) {
     let img = data[i]
     let price = parseFloat(data[i++ + 1].replace(/[$]/g, ''))
@@ -51,29 +41,20 @@ async function dataConverter(data: Array<string>) {
   return laptops
 }
 
-async function filterByName(laptops:ILaptops[]) {
-
-  let laptopsLenovo = laptops.filter((laptop)=>{
-    if(laptop.description.includes('Lenovo')){
+async function filterByBrand(brand: string) {
+  let laptops = await getDataFromSite()
+  laptops = laptops.filter((laptop) => {
+    if (laptop.description.includes(brand)) {
       return laptop
     }
 
   })
-  return laptopsLenovo
+  return laptops
 }
 
-async function sortByPrice(laptops:ILaptops[]) {
-  
- 
-  const sortByPrice = laptops.sort((laptop_a, laptop_b) => {
-    if(laptop_a.price < laptop_b.price){
-       return -1;
-    } else if(laptop_a.price > laptop_b.price){
-      return 1;
-    }
-    return 0;
-  })
-  return sortByPrice
-  
+
+export default {
+  getDataFromSite,
+  filterByBrand
+
 }
-export default { getDataFromSite }

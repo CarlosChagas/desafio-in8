@@ -1,0 +1,3 @@
+interface IParams {
+    brand: string   
+}

@@ -1,15 +1,12 @@
-import Fastify, { FastifyReply, FastifyRequest } from "fastify"
-
-import puppeteer from "./scrap_puppeteer"
+import Fastify from "fastify"
+import router from "./routers/router"
 
 
 const fastify = Fastify({
   logger: true
 })
 
-fastify.get('/', async (request: FastifyRequest, reply: FastifyReply) => {
-  reply.send(await puppeteer.getDataFromSite())
-})
+fastify.register(router, {prefix:'laptops'})
 
 fastify.listen({ port: 3333 }, (err, address) => {
 
@@ -22,3 +19,7 @@ fastify.listen({ port: 3333 }, (err, address) => {
 
   console.log(`Server listening at ${address}`)
 })
+
+function routers(routers: any) {
+  throw new Error("Function not implemented.")
+}
